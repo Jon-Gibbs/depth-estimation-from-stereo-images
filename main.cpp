@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
             zed.retrieveImage(left_image, VIEW::LEFT); // Get the left image
             zed.retrieveImage(right_image, VIEW::RIGHT); // Get the right image
             auto timestamp = zed.getTimestamp(sl::TIME_REFERENCE::IMAGE); // Get image timestamp
-            printf("Image resolution: %d x %d  || Image timestamp: %llu\n", left_image.getWidth(), left_image.getHeight(), timestamp);
+            printf("Image resolution: %llu x %llu  || Image timestamp: %llu\n", left_image.getWidth(), left_image.getHeight(), (long long unsigned int)timestamp);
             i++;
         }
         // Save both as a standard JPG/PNG file
