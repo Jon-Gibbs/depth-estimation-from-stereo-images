@@ -37,7 +37,19 @@ int main(int argc, char** argv) {
     // Get camera information (ZED serial number)
     auto camera_infos = zed.getCameraInformation();
     printf("Hello! This is my serial number: %d\n", camera_infos.serial_number);
-
+    // Capture 50 frames and stop
+    int i = 0;
+    sl::Mat image;
+    while (i < 10) {
+        // Grab an image
+        if (zed.grab() == ERROR_CODE::SUCCESS) {
+            // A new image is available if grab() returns ERROR_CODE::SUCCESS
+            zed.retrieveImage(image, VIEW::LEFT); // Get the left image
+            auto timestamp = zed.getTimestamp(sl::TIME_REFERENCE::IMAGE); // Get image timestamp
+            printf("Image resolution: %d x %d  || Image timestamp: %llu\n", image.getWidth(), image.getHeight(), timestamp);
+            i++;
+        }
+    }
     // Close the camera
     zed.close();
     return EXIT_SUCCESS;
