@@ -49,15 +49,17 @@ int main(int argc, char** argv) {
             zed.retrieveImage(left_image, VIEW::LEFT); // Get the left image
             zed.retrieveImage(right_image, VIEW::RIGHT); // Get the right image
             auto timestamp = zed.getTimestamp(sl::TIME_REFERENCE::IMAGE); // Get image timestamp
-            printf("Image resolution: %llu x %llu  || Image timestamp: %llu\n", left_image.getWidth(), left_image.getHeight(), (long long unsigned int)timestamp);
+            printf("Image resolution: %zu x %zu  || Image timestamp: %llu\n",
+                   left_image.getWidth(),
+                   left_image.getHeight(),
+                   static_cast<unsigned long long>(timestamp));
             i++;
+
+            std::string left_img_path = "images/left_frame_" + std::to_string(i) + ".jpg";
+            std::string right_img_path = "images/right_frame_" + std::to_string(i) + ".jpg";
+            left_image.write(left_img_path);
+            right_image.write(right_img_path);
         }
-        // Save both as a standard JPG/PNG file
-        string left_img_path = f"images/left_frame_{time.time()}.jpg";
-        string right_img_path = f"images/right_frame_{time.time()}.jpg";
-        left_image.write(left_img_path);
-        right_image.write(right_img_path);
-        
     }
     // Close the camera
     zed.close();
