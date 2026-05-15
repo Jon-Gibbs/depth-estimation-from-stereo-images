@@ -52,9 +52,9 @@ int main(int argc, char** argv) {
             printf("Image resolution: %d x %d  || Image timestamp: %llu\n", left_image.getWidth(), left_image.getHeight(), timestamp);
             i++;
         }
-        # Save both as a standard JPG/PNG file
-        string left_img_path = f"images/left_frame_{time.time()}.jpg"
-        string right_img_path = f"images/right_frame_{time.time()}.jpg"
+        // Save both as a standard JPG/PNG file
+        string left_img_path = f"images/left_frame_{time.time()}.jpg";
+        string right_img_path = f"images/right_frame_{time.time()}.jpg";
         left_image.write(left_img_path);
         right_image.write(right_img_path);
         
