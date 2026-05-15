@@ -19,6 +19,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include <sl/Camera.hpp>
+#include <string>
 
 using namespace sl;
 
@@ -39,16 +40,24 @@ int main(int argc, char** argv) {
     printf("Hello! This is my serial number: %d\n", camera_infos.serial_number);
     // Capture 50 frames and stop
     int i = 0;
-    sl::Mat image;
+    sl::Mat left_image;
+    sl::Mat right_image;
     while (i < 10) {
         // Grab an image
         if (zed.grab() == ERROR_CODE::SUCCESS) {
             // A new image is available if grab() returns ERROR_CODE::SUCCESS
-            zed.retrieveImage(image, VIEW::LEFT); // Get the left image
+            zed.retrieveImage(left_image, VIEW::LEFT); // Get the left image
+            zed.retrieveImage(right_image, VIEW::RIGHT); // Get the right image
             auto timestamp = zed.getTimestamp(sl::TIME_REFERENCE::IMAGE); // Get image timestamp
-            printf("Image resolution: %d x %d  || Image timestamp: %llu\n", image.getWidth(), image.getHeight(), timestamp);
+            printf("Image resolution: %d x %d  || Image timestamp: %llu\n", left_image.getWidth(), left_image.getHeight(), timestamp);
             i++;
         }
+        # Save both as a standard JPG/PNG file
+        string left_img_path = f"images/left_frame_{time.time()}.jpg"
+        string right_img_path = f"images/right_frame_{time.time()}.jpg"
+        left_image.write(left_img_path);
+        right_image.write(right_img_path);
+        
     }
     // Close the camera
     zed.close();
