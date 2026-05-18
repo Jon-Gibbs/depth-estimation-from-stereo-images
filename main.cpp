@@ -39,10 +39,8 @@ int main(int argc, char** argv) {
     auto camera_infos = zed.getCameraInformation();
     printf("Hello! This is my serial number: %d\n", camera_infos.serial_number);
     // Capture 50 frames and stop
-    int i = 0;
     sl::Mat left_image;
     sl::Mat right_image;
-    while (i < 10) {
         // Grab an image
         if (zed.grab() == ERROR_CODE::SUCCESS) {
             // A new image is available if grab() returns ERROR_CODE::SUCCESS
@@ -53,14 +51,12 @@ int main(int argc, char** argv) {
                    left_image.getWidth(),
                    left_image.getHeight(),
                    static_cast<unsigned long long>(timestamp));
-            i++;
 
-            sl::String left_img_path(("images/left_frame_" + std::to_string(i) + ".jpg").c_str());
-            sl::String right_img_path(("images/right_frame_" + std::to_string(i) + ".jpg").c_str());
+            sl::String left_img_path(("images/left_frame_" + std::to_string(static_cast<unsigned long long>(timestamp)) + ".jpg").c_str());
+            sl::String right_img_path(("images/right_frame_" + std::to_string(static_cast<unsigned long long>(timestamp)) + ".jpg").c_str());
             left_image.write(left_img_path);
             right_image.write(right_img_path);
         }
-    }
     // Close the camera
     zed.close();
     return EXIT_SUCCESS;
