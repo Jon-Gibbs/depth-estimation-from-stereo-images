@@ -55,8 +55,8 @@ int main(int argc, char** argv) {
                    static_cast<unsigned long long>(timestamp));
             i++;
 
-            std::string left_img_path = "images/left_frame_" + std::to_string(i) + ".jpg";
-            std::string right_img_path = "images/right_frame_" + std::to_string(i) + ".jpg";
+            const sl::String& left_img_path = "images/left_frame_" + std::to_string(i) + ".jpg";
+            const sl::String& right_img_path = "images/right_frame_" + std::to_string(i) + ".jpg";
             left_image.write(left_img_path);
             right_image.write(right_img_path);
         }
