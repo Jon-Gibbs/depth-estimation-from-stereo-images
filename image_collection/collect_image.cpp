@@ -23,14 +23,16 @@
 
 using namespace sl;
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
 
     // Create a ZED camera object
     Camera zed;
 
     // Open the camera
     ERROR_CODE returned_state = zed.open();
-    if (returned_state > ERROR_CODE::SUCCESS) {
+    if (returned_state > ERROR_CODE::SUCCESS)
+    {
         std::cout << "Error " << returned_state << ", exit program.\n";
         return EXIT_FAILURE;
     }
@@ -41,22 +43,23 @@ int main(int argc, char** argv) {
     // Capture 50 frames and stop
     sl::Mat left_image;
     sl::Mat right_image;
-        // Grab an image
-        if (zed.grab() == ERROR_CODE::SUCCESS) {
-            // A new image is available if grab() returns ERROR_CODE::SUCCESS
-            zed.retrieveImage(left_image, VIEW::LEFT); // Get the left image
-            zed.retrieveImage(right_image, VIEW::RIGHT); // Get the right image
-            auto timestamp = zed.getTimestamp(sl::TIME_REFERENCE::IMAGE); // Get image timestamp
-            printf("Image resolution: %zu x %zu  || Image timestamp: %llu\n",
-                   left_image.getWidth(),
-                   left_image.getHeight(),
-                   static_cast<unsigned long long>(timestamp));
+    // Grab an image
+    if (zed.grab() == ERROR_CODE::SUCCESS)
+    {
+        // A new image is available if grab() returns ERROR_CODE::SUCCESS
+        zed.retrieveImage(left_image, VIEW::LEFT);                    // Get the left image
+        zed.retrieveImage(right_image, VIEW::RIGHT);                  // Get the right image
+        auto timestamp = zed.getTimestamp(sl::TIME_REFERENCE::IMAGE); // Get image timestamp
+        printf("Image resolution: %zu x %zu  || Image timestamp: %llu\n",
+               left_image.getWidth(),
+               left_image.getHeight(),
+               static_cast<unsigned long long>(timestamp));
 
-            sl::String left_img_path(("images/left_frame_" + std::to_string(static_cast<unsigned long long>(timestamp)) + ".jpg").c_str());
-            sl::String right_img_path(("images/right_frame_" + std::to_string(static_cast<unsigned long long>(timestamp)) + ".jpg").c_str());
-            left_image.write(left_img_path);
-            right_image.write(right_img_path);
-        }
+        sl::String left_img_path(("images/left_frame_" + std::to_string(static_cast<unsigned long long>(timestamp)) + ".jpg").c_str());
+        sl::String right_img_path(("images/right_frame_" + std::to_string(static_cast<unsigned long long>(timestamp)) + ".jpg").c_str());
+        left_image.write(left_img_path);
+        right_image.write(right_img_path);
+    }
     // Close the camera
     zed.close();
     return EXIT_SUCCESS;

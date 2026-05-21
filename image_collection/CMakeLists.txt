@@ -19,7 +19,10 @@ include_directories(${ZED_INCLUDE_DIRS})
 link_directories(${ZED_LIBRARY_DIR})
 link_directories(${CUDA_LIBRARY_DIRS})
 
-ADD_EXECUTABLE(${PROJECT_NAME} main.cpp)
+set(COMMON_ZED_SOURCES collect_image.cpp)
+
+add_executable(collect_images ${COMMON_ZED_SOURCES})
+add_executable(collect_intrinsics collect_intrinsics.cpp)
 
 if (LINK_SHARED_ZED)
     SET(ZED_LIBS ${ZED_LIBRARIES} ${CUDA_CUDA_LIBRARY} ${CUDA_CUDART_LIBRARY})
@@ -27,4 +30,5 @@ else()
     SET(ZED_LIBS ${ZED_STATIC_LIBRARIES} ${CUDA_CUDA_LIBRARY} ${CUDA_LIBRARY})
 endif()
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${ZED_LIBS})
+target_link_libraries(collect_images ${ZED_LIBS})
+target_link_libraries(collect_intrinsics ${ZED_LIBS})
