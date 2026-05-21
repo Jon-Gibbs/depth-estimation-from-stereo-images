@@ -1,0 +1,17 @@
+---
+left_camera:
+  fx: 0
+  fy: 0
+  cx: 0
+  cy: 0
+right_camera:
+  fx: 0
+  fy: 0
+  cx: 0
+  cy: 0
+relative_pos:
+  x_pos: 0
+  y_pos: 0
+  u: 0
+  v: 0
+  w: 0

@@ -55,8 +55,8 @@ int main(int argc, char **argv)
                left_image.getHeight(),
                static_cast<unsigned long long>(timestamp));
 
-        sl::String left_img_path(("images/left_frame_" + std::to_string(static_cast<unsigned long long>(timestamp)) + ".jpg").c_str());
-        sl::String right_img_path(("images/right_frame_" + std::to_string(static_cast<unsigned long long>(timestamp)) + ".jpg").c_str());
+        sl::String left_img_path(("unrectified_images/left_frame_" + std::to_string(static_cast<unsigned long long>(timestamp)) + ".jpg").c_str());
+        sl::String right_img_path(("unrectified_images/right_frame_" + std::to_string(static_cast<unsigned long long>(timestamp)) + ".jpg").c_str());
         left_image.write(left_img_path);
         right_image.write(right_img_path);
     }
