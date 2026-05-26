@@ -1,8 +1,13 @@
 #include <sl/Camera.hpp>
 #include <iostream>
+#include <fstream>
+#include <yaml-cpp/yaml.h>
+
 using namespace sl;
 int main()
 {
+    YAML::Node config = YAML::LoadFile("intrinsics.yaml");
+
     sl::Camera zed;
     sl::InitParameters init_params;
     init_params.camera_resolution = sl::RESOLUTION::HD720;
@@ -25,25 +30,62 @@ int main()
     std::cout << "Left fy: " << calib.left_cam.fy << "\n";
     std::cout << "Left cx: " << calib.left_cam.cx << "\n";
     std::cout << "Left cy: " << calib.left_cam.cy << "\n";
+    config["left_camera"]["intrinsics"]["fx"] = calib.left_cam.fx;
+    config["left_camera"]["intrinsics"]["fy"] = calib.left_cam.fy;
+    config["left_camera"]["intrinsics"]["cx"] = calib.left_cam.cx;
+    config["left_camera"]["intrinsics"]["cy"] = calib.left_cam.cy;
+    // Distortion: [k1, k2, p1, p2, k3]
+    std::cout << "Distortion coefficients:" << std::endl;
+    std::cout << "  k1: " << calib.left_cam.disto[0] << std::endl;
+    std::cout << "  k2: " << calib.left_cam.disto[1] << std::endl;
+    std::cout << "  p1: " << calib.left_cam.disto[2] << std::endl;
+    std::cout << "  p2: " << calib.left_cam.disto[3] << std::endl;
+    std::cout << "  k3: " << calib.left_cam.disto[4] << std::endl;
+    config["left_camera"]["disto"]["k1"] = calib.left_cam.disto[0];
+    config["left_camera"]["disto"]["k2"] = calib.left_cam.disto[1];
+    config["left_camera"]["disto"]["p1"] = calib.left_cam.disto[2];
+    config["left_camera"]["disto"]["p2"] = calib.left_cam.disto[3];
+    config["left_camera"]["disto"]["k3"] = calib.left_cam.disto[4];
 
     // Right camera intrinsics
     std::cout << "Right fx: " << calib.right_cam.fx << "\n";
     std::cout << "Right fy: " << calib.right_cam.fy << "\n";
     std::cout << "Right cx: " << calib.right_cam.cx << "\n";
     std::cout << "Right cy: " << calib.right_cam.cy << "\n";
-
-    // Distortion coefficients (vector)
-    std::cout << "Left disto: ";
-    for (const auto &d : calib.left_cam.disto)
-        std::cout << d << " ";
-    std::cout << "\nRight disto: ";
-    for (const auto &d : calib.right_cam.disto)
-        std::cout << d << " ";
-    std::cout << "\n";
+    config["right_camera"]["intrinsics"]["fx"] = calib.right_cam.fx;
+    config["right_camera"]["intrinsics"]["fy"] = calib.right_cam.fy;
+    config["right_camera"]["intrinsics"]["cx"] = calib.right_cam.cx;
+    config["right_camera"]["intrinsics"]["cy"] = calib.right_cam.cy;
+    // Distortion: [k1, k2, p1, p2, k3]
+    std::cout << "Distortion coefficients:" << std::endl;
+    std::cout << "  k1: " << calib.right_cam.disto[0] << std::endl;
+    std::cout << "  k2: " << calib.right_cam.disto[1] << std::endl;
+    std::cout << "  p1: " << calib.right_cam.disto[2] << std::endl;
+    std::cout << "  p2: " << calib.right_cam.disto[3] << std::endl;
+    std::cout << "  k3: " << calib.right_cam.disto[4] << std::endl;
+    config["right_camera"]["disto"]["k1"] = calib.right_cam.disto[0];
+    config["right_camera"]["disto"]["k2"] = calib.right_cam.disto[1];
+    config["right_camera"]["disto"]["p1"] = calib.right_cam.disto[2];
+    config["right_camera"]["disto"]["p2"] = calib.right_cam.disto[3];
+    config["right_camera"]["disto"]["k3"] = calib.right_cam.disto[4];
 
     // Stereo baseline (translation between cameras)
-    std::cout << "Baseline T.x: " << calib.T.x << " (units depend on SDK struct)\n";
+    std::cout << "Baseline T.x: " << calib.T.x << std::endl;
+    config["translation"]["x_pos"] = calib.T.x;
+    config["translation"]["y_pos"] = calib.T.y;
+    config["translation"]["z_pos"] = calib.T.z;
 
+    // Stero rotation (rotation between cameras)
+    std::cout << "Rotation x: " << Calib.R.x << std::endl;
+    std::cout << "Rotation y: " << Calib.R.y << std::endl;
+    std::cout << "Rotation z: " << Calib.R.z << std::endl;
+    config["rotation"]["x"] = Calib.R.x;
+    config["rotation"]["y"] = Calib.R.y;
+    config["rotation"]["z"] = Calib.R.z;
+
+    std::ofstream fout("instrinsics.yaml");
+
+    fout << config;
     zed.close();
     return 0;
 }
