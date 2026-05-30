@@ -1,34 +1,33 @@
 ---
 left_camera:
   intrinsics:
-    fx: 0
-    fy: 0
-    cx: 0
-    cy: 0
+    fx: 698.939
+    fy: 698.939
+    cx: 637.216
+    cy: 359.143
   disto:
-    k1:
-    k2:
-    p1:
-    p2:
-    k3:
+    k1: -0.1728
+    k2: 0.0279
+    p1: 0.0001
+    p2: -0.0003
+    k3: -0.0045
 right_camera:
   intrinsics:
-    fx: 0
-    fy: 0
-    cx: 0
-    cy: 0
+    fx: 698.939
+    fy: 698.939
+    cx: 635.812
+    cy: 358.791
   disto:
-    k1:
-    k2:
-    p1:
-    p2:
-    k3:
+    k1: -0.1712
+    k2: 0.0271
+    p1: 0.0002
+    p2: -0.0001
+    k3: -0.0041
 translation:
-  x_pos: 0
-  y_pos: 0
-  z_pos: 0
-
+  x_pos: -119.978
+  y_pos: 0.012
+  z_pos: 0.008
 rotation:
-  x:
-  y:
-  z:
+  x: 0.0012
+  y: 0.0008
+  z: 0.0003
