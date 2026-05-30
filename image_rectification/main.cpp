@@ -3,7 +3,7 @@
 int main()
 {
     const std::string leftImagePath = "../unrectified_images/left_frame_1.jpg";
-    const std::string rightImagePath = "../unrectified_images/left_frame_2.jpg";
+    const std::string rightImagePath = "../unrectified_images/right_frame_1.jpg";
     const std::string calibrationPath = "../camera/intrinsics.yaml";
 
     cv::Mat left_img = cv::imread(leftImagePath, cv::IMREAD_COLOR);

@@ -18,8 +18,8 @@ StereoRectifier::StereoRectifier(const std::string &calibrationPath, cv::Size im
     K_L_ = cv::Mat::zeros(3, 3, CV_32F);
     K_R_ = cv::Mat::zeros(3, 3, CV_32F);
     // intialize distortion matricies
-    dist_L_ = cv::Mat<cv::Mat<float>>::zeroes(1, 5, CV_32F);
-    dist_R_ = cv::Mat<cv::Mat<float>>::zeroes(1, 5, CV_32F);
+    dist_L_ = cv::Mat::zeros(1, 5, CV_32F);
+    dist_R_ = cv::Mat::zeros(1, 5, CV_32F);
     // initaliize transaltion and rotation
     R_ = cv::Mat::zeros(3, 1, CV_32F);
     T_ = cv::Mat::zeros(3, 1, CV_32F);
@@ -36,32 +36,33 @@ StereoRectifier::StereoRectifier(const std::string &calibrationPath, cv::Size im
 // POST: K_L_, dist_L_, K_R_, dist_R_, R_, T_ are populated
 void StereoRectifier::loadCalibration(const std::string &path)
 {
+    YAML::Node config = YAML::LoadFile(path);
     // populate intrinsics matricies
     // left camera
-    K_L_[0][0] = config["left_camera"]["intrinsics"]["fx"].as<float>();
-    K_L_[1][1] = config["left_camera"]["intrinsics"]["fy"].as<float>();
-    K_L_[0][2] = config["left_camera"]["intrinsics"]["cx"].as<float>();
-    K_L_[1][2] = config["left_camera"]["intrinsics"]["cy"].as<float>();
-    K_L_[2][2] = 1;
+    K_L_.at<float>(0, 0) = config["left_camera"]["intrinsics"]["fx"].as<float>();
+    K_L_.at<float>(1, 1) = config["left_camera"]["intrinsics"]["fy"].as<float>();
+    K_L_.at<float>(0, 2) = config["left_camera"]["intrinsics"]["cx"].as<float>();
+    K_L_.at<float>(1, 2) = config["left_camera"]["intrinsics"]["cy"].as<float>();
+    K_L_.at<float>(2, 2) = 1;
     // right camera
-    K_R_[0][0] = config["right_camera"]["intrinsics"]["fx"].as<float>();
-    K_R_[1][1] = config["right_camera"]["intrinsics"]["fy"].as<float>();
-    K_R_[0][2] = config["right_camera"]["intrinsics"]["cx"].as<float>();
-    K_R_[1][2] = config["right_camera"]["intrinsics"]["cy"].as<float>();
-    K_R_[2][2] = 1;
+    K_R_.at<float>(0, 0) = config["right_camera"]["intrinsics"]["fx"].as<float>();
+    K_R_.at<float>(1, 1) = config["right_camera"]["intrinsics"]["fy"].as<float>();
+    K_R_.at<float>(0, 2) = config["right_camera"]["intrinsics"]["cx"].as<float>();
+    K_R_.at<float>(1, 2) = config["right_camera"]["intrinsics"]["cy"].as<float>();
+    K_R_.at<float>(2, 2) = 1;
     // populate distortion matricies
     // left camera
-    dist_L_[0][0] = config["left_camera"]["disto"]["k1"].as<float>();
-    dist_L_[0][1] = config["left_camera"]["disto"]["k2"].as<float>();
-    dist_L_[0][2] = config["left_camera"]["disto"]["p1"].as<float>();
-    dist_L_[0][3] = config["left_camera"]["disto"]["p2"].as<float>();
-    dist_L_[0][4] = config["left_camera"]["disto"]["k3"].as<float>();
+    dist_L_.at<float>(0, 0) = config["left_camera"]["disto"]["k1"].as<float>();
+    dist_L_.at<float>(0, 1) = config["left_camera"]["disto"]["k2"].as<float>();
+    dist_L_.at<float>(0, 2) = config["left_camera"]["disto"]["p1"].as<float>();
+    dist_L_.at<float>(0, 3) = config["left_camera"]["disto"]["p2"].as<float>();
+    dist_L_.at<float>(0, 4) = config["left_camera"]["disto"]["k3"].as<float>();
     // right camera
-    dist_R_[0][0] = config["right_camera"]["disto"]["k1"].as<float>();
-    dist_R_[0][1] = config["right_camera"]["disto"]["k2"].as<float>();
-    dist_R_[0][2] = config["right_camera"]["disto"]["p1"].as<float>();
-    dist_R_[0][3] = config["right_camera"]["disto"]["p2"].as<float>();
-    dist_R_[0][4] = config["right_camera"]["disto"]["k3"].as<float>();
+    dist_R_.at<float>(0, 0) = config["right_camera"]["disto"]["k1"].as<float>();
+    dist_R_.at<float>(0, 1) = config["right_camera"]["disto"]["k2"].as<float>();
+    dist_R_.at<float>(0, 2) = config["right_camera"]["disto"]["p1"].as<float>();
+    dist_R_.at<float>(0, 3) = config["right_camera"]["disto"]["p2"].as<float>();
+    dist_R_.at<float>(0, 4) = config["right_camera"]["disto"]["k3"].as<float>();
     // populate rotation and tranlsation matricies
     // rotation of the right camera relative to the left camera
     // load euler angles into a temporary vector
