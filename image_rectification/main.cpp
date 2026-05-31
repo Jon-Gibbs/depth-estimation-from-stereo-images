@@ -58,7 +58,8 @@ int main()
 
     // 4. Compute the raw disparity map
     cv::Mat disparityRaw;
-    stereo->compute(imgLeft, imgRight, disparityRaw);
+    stereo->compute(left_img
+        , right_img, disparityRaw);
 
     // 5. Convert raw disparity for visualization
     // Stereo matches return 16-bit signed integers (CV_16S) scaled by 16
@@ -70,7 +71,7 @@ int main()
     cv::applyColorMap(disparityVisual, disparityColored, cv::COLORMAP_JET);
 
     // 7. Display the result
-    cv::imshow("Left Image", imgLeft);
+    cv::imshow("Left Image", left_img);
     cv::imshow("Disparity Map (Colored)", disparityColored);
         cv::imwrite("../rectified_images/left_rectified.jpg", rectified_L);
         cv::imwrite("../rectified_images/right_rectified.jpg", rectified_R);
@@ -80,6 +81,6 @@ int main()
         std::cerr << "Rectification failed: " << e.what() << std::endl;
         return 1;
     }
-
+    cv::waitKey(0);
     return 0;
 }
