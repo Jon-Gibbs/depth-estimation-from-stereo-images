@@ -1,7 +1,9 @@
 #include "template_matcher.h"
 
 // if x_L and y_L are on the edge, return
-void findMatchingWindow(const cv::Mat &img_L, const cv::Mat &img_R, const int x_L, const int y_L, int &x_R, int &y_R) {
+void findMatchingWindow(const cv::Mat &img_L, const cv::Mat &img_R, 
+                        const int x_L, const int y_L, int &x_R, int &y_R) {
+    
     // with rectified images, the matching window must lie in the scanline of the right image
     y_R = y_L;
 
@@ -34,6 +36,32 @@ void findMatchingWindow(const cv::Mat &img_L, const cv::Mat &img_R, const int x_
             x_R = sliding_X_R;
         }
     }
+
+}
+
+void drawMatchingPoints(const cv::Mat &img_L, const cv::Mat &img_R, 
+                        const int x_L, const int y_L, 
+                        const int x_R, const int y_R,
+                        cv::Mat &output_L, cv::Mat &output_R) {
+    output_L = img_L.clone();
+    output_R = img_R.clone();
+    cv::circle(
+        output_L,                // Image to draw on
+        Point(x_L, y_L),              // Center point
+        3,                  // Radius in pixels
+        cv::Scalar(0, 0, 255), // Color (B, G, R) → Red
+        cv::FILLED,         // Fill the circle
+        cv::LINE_AA         // Anti-aliased line
+    );
+
+    cv::circle(
+        output_R,                // Image to draw on
+        Point(x_R, y_R),              // Center point
+        3,                  // Radius in pixels
+        cv::Scalar(0, 0, 255), // Color (B, G, R) → Red
+        cv::FILLED,         // Fill the circle
+        cv::LINE_AA         // Anti-aliased line
+    );
 
 }
 
