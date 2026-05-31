@@ -1,5 +1,6 @@
 #include "template_matcher.h"
 
+// if x_L and y_L are on the edge, return
 void findMatchingWindow(const cv::Mat &img_L, const cv::Mat &img_R, const int x_L, const int y_L, int &x_R, int &y_R) {
     // with rectified images, the matching window must lie in the scanline of the right image
     y_R = y_L;
@@ -7,6 +8,10 @@ void findMatchingWindow(const cv::Mat &img_L, const cv::Mat &img_R, const int x_
     int minDiff = INT_MAX;
 
     int half = _windowSize / 2;
+
+    if (x_L - half < 0 || x_L + half >= img_L.cols ||
+        y_L - half < 0 || y_L + half >= img_L.rows)
+        return;
 
     // sliding x value in the right image
     for (int sliding_X_R = half; sliding_X_R < img_L.cols - half; sliding_X_R++) {
