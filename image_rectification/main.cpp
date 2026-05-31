@@ -32,7 +32,7 @@ int main()
         cv::Mat rectified_pair;
         cv::hconcat(left_img, right_img, unrectified_pair);
         cv::hconcat(rectified_L, rectified_R, rectified_pair);
-
+        
         cv::imshow("Unrectified Pair", unrectified_pair);
         cv::imshow("Rectified Pair", rectified_pair);
 
