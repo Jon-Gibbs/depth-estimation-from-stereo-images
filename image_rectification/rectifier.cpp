@@ -18,8 +18,8 @@ StereoRectifier::StereoRectifier(const std::string &calibrationPath, cv::Size im
     K_L_ = cv::Mat::zeros(3, 3, CV_32F);
     K_R_ = cv::Mat::zeros(3, 3, CV_32F);
     // intialize distortion matricies
-    dist_L_ = cv::Mat<cv::Mat<float>>::zeroes(1, 5, CV_32F);
-    dist_R_ = cv::Mat<cv::Mat<float>>::zeroes(1, 5, CV_32F);
+    dist_L_ = cv::Mat::zeros(1, 5, CV_32F);
+    dist_R_ = cv::Mat::zeros(1, 5, CV_32F);
     // initaliize transaltion and rotation
     R_ = cv::Mat::zeros(3, 1, CV_32F);
     T_ = cv::Mat::zeros(3, 1, CV_32F);
@@ -36,32 +36,33 @@ StereoRectifier::StereoRectifier(const std::string &calibrationPath, cv::Size im
 // POST: K_L_, dist_L_, K_R_, dist_R_, R_, T_ are populated
 void StereoRectifier::loadCalibration(const std::string &path)
 {
+    YAML::Node config = YAML::LoadFile(path);
     // populate intrinsics matricies
     // left camera
-    K_L_[0][0] = config["left_camera"]["intrinsics"]["fx"].as<float>();
-    K_L_[1][1] = config["left_camera"]["intrinsics"]["fy"].as<float>();
-    K_L_[0][2] = config["left_camera"]["intrinsics"]["cx"].as<float>();
-    K_L_[1][2] = config["left_camera"]["intrinsics"]["cy"].as<float>();
-    K_L_[2][2] = 1;
+    K_L_.at<float>(0, 0) = config["left_camera"]["intrinsics"]["fx"].as<float>();
+    K_L_.at<float>(1, 1) = config["left_camera"]["intrinsics"]["fy"].as<float>();
+    K_L_.at<float>(0, 2) = config["left_camera"]["intrinsics"]["cx"].as<float>();
+    K_L_.at<float>(1, 2) = config["left_camera"]["intrinsics"]["cy"].as<float>();
+    K_L_.at<float>(2, 2) = 1;
     // right camera
-    K_R_[0][0] = config["right_camera"]["intrinsics"]["fx"].as<float>();
-    K_R_[1][1] = config["right_camera"]["intrinsics"]["fy"].as<float>();
-    K_R_[0][2] = config["right_camera"]["intrinsics"]["cx"].as<float>();
-    K_R_[1][2] = config["right_camera"]["intrinsics"]["cy"].as<float>();
-    K_R_[2][2] = 1;
+    K_R_.at<float>(0, 0) = config["right_camera"]["intrinsics"]["fx"].as<float>();
+    K_R_.at<float>(1, 1) = config["right_camera"]["intrinsics"]["fy"].as<float>();
+    K_R_.at<float>(0, 2) = config["right_camera"]["intrinsics"]["cx"].as<float>();
+    K_R_.at<float>(1, 2) = config["right_camera"]["intrinsics"]["cy"].as<float>();
+    K_R_.at<float>(2, 2) = 1;
     // populate distortion matricies
     // left camera
-    dist_L_[0][0] = config["left_camera"]["disto"]["k1"].as<float>();
-    dist_L_[0][1] = config["left_camera"]["disto"]["k2"].as<float>();
-    dist_L_[0][2] = config["left_camera"]["disto"]["p1"].as<float>();
-    dist_L_[0][3] = config["left_camera"]["disto"]["p2"].as<float>();
-    dist_L_[0][4] = config["left_camera"]["disto"]["k3"].as<float>();
+    dist_L_.at<float>(0, 0) = config["left_camera"]["disto"]["k1"].as<float>();
+    dist_L_.at<float>(0, 1) = config["left_camera"]["disto"]["k2"].as<float>();
+    dist_L_.at<float>(0, 2) = config["left_camera"]["disto"]["p1"].as<float>();
+    dist_L_.at<float>(0, 3) = config["left_camera"]["disto"]["p2"].as<float>();
+    dist_L_.at<float>(0, 4) = config["left_camera"]["disto"]["k3"].as<float>();
     // right camera
-    dist_R_[0][0] = config["right_camera"]["disto"]["k1"].as<float>();
-    dist_R_[0][1] = config["right_camera"]["disto"]["k2"].as<float>();
-    dist_R_[0][2] = config["right_camera"]["disto"]["p1"].as<float>();
-    dist_R_[0][3] = config["right_camera"]["disto"]["p2"].as<float>();
-    dist_R_[0][4] = config["right_camera"]["disto"]["k3"].as<float>();
+    dist_R_.at<float>(0, 0) = config["right_camera"]["disto"]["k1"].as<float>();
+    dist_R_.at<float>(0, 1) = config["right_camera"]["disto"]["k2"].as<float>();
+    dist_R_.at<float>(0, 2) = config["right_camera"]["disto"]["p1"].as<float>();
+    dist_R_.at<float>(0, 3) = config["right_camera"]["disto"]["p2"].as<float>();
+    dist_R_.at<float>(0, 4) = config["right_camera"]["disto"]["k3"].as<float>();
     // populate rotation and tranlsation matricies
     // rotation of the right camera relative to the left camera
     // load euler angles into a temporary vector
@@ -82,11 +83,16 @@ void StereoRectifier::loadCalibration(const std::string &path)
 void StereoRectifier::computeRectification()
 {
     // compute R_L and R_R
-    // compute R_L and R_R
+    // e1: along baseline, always pointing in +X so the rectified frame is right-side-up
     cv::Mat e1 = T_ / cv::norm(T_);
+    if (e1.at<float>(0) < 0) e1 = -e1;
+
+    // e2: new Y axis (downward) = z × e1
     cv::Mat z = (cv::Mat_<float>(3, 1) << 0.0f, 0.0f, 1.0f);
-    cv::Mat e2 = e1.cross(z);
+    cv::Mat e2 = z.cross(e1);
     e2 = e2 / cv::norm(e2);
+
+    // e3: new Z axis (forward) = e1 × e2 (right-hand rule, guaranteed positive Z)
     cv::Mat e3 = e1.cross(e2);
 
     // stack e1, e2, e3 into rotation matrix (each as a row)
@@ -226,19 +232,20 @@ void StereoRectifier::rectifyImages(const cv::Mat &img_L, const cv::Mat &img_R,
                 {
                     continue;
                 }
-
+                //get pixel floor values
                 const int x0 = cvFloor(x);
                 const int y0 = cvFloor(y);
                 const int x1 = x0 + 1;
                 const int y1 = y0 + 1;
-
+                //get pixel fractional values
                 const float dx = x - static_cast<float>(x0);
                 const float dy = y - static_cast<float>(y0);
+                //compute weights for each pixel
                 const float w00 = (1.0f - dx) * (1.0f - dy);
                 const float w10 = dx * (1.0f - dy);
                 const float w01 = (1.0f - dx) * dy;
                 const float w11 = dx * dy;
-
+                //if greyscale, perform bilinear interpolation on the intensity value
                 if (channels == 1)
                 {
                     const float i00 = static_cast<float>(src.at<uchar>(y0, x0));
@@ -249,6 +256,7 @@ void StereoRectifier::rectifyImages(const cv::Mat &img_L, const cv::Mat &img_R,
                     const float value = w00 * i00 + w10 * i10 + w01 * i01 + w11 * i11;
                     dst.at<uchar>(v, u) = cv::saturate_cast<uchar>(value);
                 }
+                //if 8UC3, perform bilinear interpolation for each color
                 else
                 {
                     const cv::Vec3b p00 = src.at<cv::Vec3b>(y0, x0);
