@@ -12,6 +12,7 @@ endif()
 
 find_package(ZED REQUIRED)
 find_package(CUDA ${ZED_CUDA_VERSION} REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 include_directories(${CUDA_INCLUDE_DIRS})
 include_directories(${ZED_INCLUDE_DIRS})
@@ -31,4 +32,4 @@ else()
 endif()
 
 target_link_libraries(collect_images ${ZED_LIBS})
-target_link_libraries(collect_intrinsics ${ZED_LIBS})
+target_link_libraries(collect_intrinsics ${ZED_LIBS} yaml-cpp)
