@@ -69,19 +69,37 @@ int main()
     config["right_camera"]["disto"]["p2"] = calib.right_cam.disto[3];
     config["right_camera"]["disto"]["k3"] = calib.right_cam.disto[4];
 
+    '''
+    CalibrationParameters calibration_params = zed.getCameraInformation().camera_configuration.calibration_parameters;
+// Focal length of the left eye in pixels
+float focal_left_x = calibration_params.left_cam.fx;
+// First radial distortion coefficient
+float k1 = calibration_params.left_cam.disto[0];
+// Translation between left and right eye on x-axis
+float tx = calibration_params.stereo_transform.getTranslation()[0];
+// Horizontal field of view of the left eye in degrees
+float h_fov = calibration_params.left_cam.h_fov;
+    '''
     // Stereo baseline (translation between cameras)
     std::cout << "Baseline T.x: " << calib.T.x << std::endl;
-    config["translation"]["x_pos"] = calib.T.x;
-    config["translation"]["y_pos"] = calib.T.y;
-    config["translation"]["z_pos"] = calib.T.z;
+    config["translation"]["x_pos"] = calib.stereo_transform.getTranslation()[0];
+    config["translation"]["y_pos"] = calib.stereo_transform.getTranslation()[1];
+    config["translation"]["z_pos"] = calib.stereo_transform.getTranslation()[2];
 
     // Stero rotation (rotation between cameras)
-    std::cout << "Rotation x: " << Calib.R.x << std::endl;
-    std::cout << "Rotation y: " << Calib.R.y << std::endl;
-    std::cout << "Rotation z: " << Calib.R.z << std::endl;
-    config["rotation"]["x"] = Calib.R.x;
-    config["rotation"]["y"] = Calib.R.y;
-    config["rotation"]["z"] = Calib.R.z;
+    std::cout << "Rotation x: " << calib.stereo_transform.getRotationMatrix()[0][0]; << std::endl;
+    std::cout << "Rotation y: " << calib.stereo_transform.getRotationMatrix()[1][1]; << std::endl;
+    std::cout << "Rotation z: " << calib.stereo_transform.getRotationMatrix(); << std::endl;
+    sl::Rotation R = calib.stereo_transform.getRotationMatrix();
+    for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
+        std::cout << R(i, j) << " ";
+    }
+    std::cout << "\n";
+}
+    config["rotation"]["x"] = calib.R.x;
+    config["rotation"]["y"] = calib.R.y;
+    config["rotation"]["z"] = calib.R.z;
 
     std::ofstream fout("instrinsics.yaml");
 
