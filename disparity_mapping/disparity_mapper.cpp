@@ -3,8 +3,8 @@
 #include <opencv2/opencv.hpp>
 
 
-DisparityMapper::DisparityMapper(int windowSize, int stride)
-    : _matcher(windowSize), _windowSize(windowSize), _stride(stride) {}
+DisparityMapper::DisparityMapper(int windowSize, int stride, int maxDisparity)
+    : _matcher(windowSize, maxDisparity), _windowSize(windowSize), _stride(stride), _maxDisparity(maxDisparity) {}
 
 cv::Mat DisparityMapper::computeDisparityMap(const cv::Mat &img_L, const cv::Mat &img_R) {
     int rows = img_L.rows;

@@ -4,7 +4,7 @@
 
 class DisparityMapper {
 public:
-    DisparityMapper(int windowSize, int stride = 1);
+    DisparityMapper(int windowSize, int stride = 1, int maxDisparity = 64);
 
     // Computes disparity map from a stereo image pair.
     // Returns a float Mat of raw disparity values.
@@ -17,4 +17,5 @@ private:
     TemplateMatcher _matcher;
     int _windowSize;
     int _stride;
+    int _maxDisparity;
 };
