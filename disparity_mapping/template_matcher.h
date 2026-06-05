@@ -6,7 +6,7 @@
 
 class TemplateMatcher {
 public:
-    TemplateMatcher(int windowSize);
+    TemplateMatcher(int windowSize, int maxDisparity);
     void findMatchingWindow(const cv::Mat &img_L, const cv::Mat &img_R, 
                         const int x_L, const int y_L, int &x_R, int &y_R);
 
@@ -17,4 +17,5 @@ public:
 
 private:
     int _windowSize;
+    int _maxDisparity;
 };

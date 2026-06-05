@@ -11,7 +11,7 @@ int main() {
     cv::Mat right_img = cv::imread(rightImagePath, cv::IMREAD_COLOR);
 
     //TemplateMatcher tm(9);
-    DisparityMapper dm(11);
+    DisparityMapper dm(9);
     cv::Mat output = dm.computeDisparityMap(left_img, right_img);
     dm.saveDisparityImage(output, "C:/Users/cooky/Documents/depth-estimation-from-stereo-images/other_image_output/disparity_map.jpg");
 

@@ -18,7 +18,9 @@ void TemplateMatcher::findMatchingWindow(const cv::Mat &img_L, const cv::Mat &im
         return;
 
     // sliding x value in the right image
-    for (int sliding_X_R = half; sliding_X_R < img_L.cols - half; sliding_X_R++) {
+    for (int sliding_X_R = std::max(half, x_L - _maxDisparity);
+         sliding_X_R < std::min(img_R.cols - half, x_L + _maxDisparity);
+         sliding_X_R++) {
         int ssd = 0;
         for (int i = -half; i < half; i++) {
             for (int j = -half; j < half; j++) {
@@ -67,6 +69,7 @@ void TemplateMatcher::drawMatchingPoints(const cv::Mat &img_L, const cv::Mat &im
 }
 
 // should be odd number
-TemplateMatcher::TemplateMatcher(int windowSize) {
+TemplateMatcher::TemplateMatcher(int windowSize, int maxDisparity) {
     _windowSize = windowSize;
+    _maxDisparity = maxDisparity;
 }
