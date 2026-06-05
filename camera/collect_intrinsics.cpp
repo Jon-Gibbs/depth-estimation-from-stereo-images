@@ -83,9 +83,9 @@ int main()
     }
     std::cout << "\n";
 }
-    config["rotation"]["x"] = calib.R.x;
+    /*config["rotation"]["x"] = calib.R.x;
     config["rotation"]["y"] = calib.R.y;
-    config["rotation"]["z"] = calib.R.z;
+    config["rotation"]["z"] = calib.R.z;*/
 
     std::ofstream fout("instrinsics.yaml");
 
