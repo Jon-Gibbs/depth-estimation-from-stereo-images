@@ -69,17 +69,6 @@ int main()
     config["right_camera"]["disto"]["p2"] = calib.right_cam.disto[3];
     config["right_camera"]["disto"]["k3"] = calib.right_cam.disto[4];
 
-    '''
-    CalibrationParameters calibration_params = zed.getCameraInformation().camera_configuration.calibration_parameters;
-// Focal length of the left eye in pixels
-float focal_left_x = calibration_params.left_cam.fx;
-// First radial distortion coefficient
-float k1 = calibration_params.left_cam.disto[0];
-// Translation between left and right eye on x-axis
-float tx = calibration_params.stereo_transform.getTranslation()[0];
-// Horizontal field of view of the left eye in degrees
-float h_fov = calibration_params.left_cam.h_fov;
-    '''
     // Stereo baseline (translation between cameras)
     std::cout << "Baseline T.x: " << calib.T.x << std::endl;
     config["translation"]["x_pos"] = calib.stereo_transform.getTranslation()[0];
