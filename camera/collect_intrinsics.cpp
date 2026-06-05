@@ -6,7 +6,7 @@
 using namespace sl;
 int main()
 {
-    YAML::Node config = YAML::LoadFile("intrinsics.yaml");
+    YAML::Node config = YAML::LoadFile("camera_info.yaml");
 
     sl::Camera zed;
     sl::InitParameters init_params;
@@ -87,7 +87,7 @@ int main()
     config["rotation"]["y"] = calib.R.y;
     config["rotation"]["z"] = calib.R.z;*/
 
-    std::ofstream fout("instrinsics.yaml");
+    std::ofstream fout("camera_info.yaml");
 
     fout << config;
     zed.close();
