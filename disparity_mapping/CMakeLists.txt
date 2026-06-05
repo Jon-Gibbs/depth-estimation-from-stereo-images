@@ -1,27 +1,19 @@
-cmake_minimum_required(VERSION 3.50)
-project(DisparityMapper)
 
-set(CMAKE_CXX_STANDARD 17)
 
-# find dependencies
+cmake_minimum_required(VERSION 3.10)
+project(disparity_mapper)
+
+# Tell CMake where to find OpenCV (your MSYS2 UCRT64 install)
+set(OpenCV_DIR "C:/msys64/ucrt64/lib/cmake/opencv4")
+
 find_package(OpenCV REQUIRED)
-find_package(yaml-cpp REQUIRED)
 
-# include headers
-include_directories(
-    ${OpenCV_INCLUDE_DIRS}
-    ${YAML_CPP_INCLUDE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}   # so main.cpp can find rectifier.h
-)
+add_executable(disparity_mapper main.cpp disparity_mapper.cpp template_matcher.cpp)
 
-# define the executable and its source files
-add_executable(disparity_mapper
-    main.cpp
-    disparity_mapper.cpp
-)
+# Include headers + link libraries
+target_include_directories(disparity_mapper PRIVATE ${OpenCV_INCLUDE_DIRS})
+target_link_libraries(disparity_mapper PRIVATE ${OpenCV_LIBS})
 
-# link libraries
-target_link_libraries(disparity_mapper
-    ${OpenCV_LIBS}
-    yaml-cpp
-)
+if(NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose Release or Debug" FORCE)
+endif()

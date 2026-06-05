@@ -1,0 +1,27 @@
+#include "disparity_mapper.h"
+#include <opencv2/opencv.hpp>
+
+
+int main() {
+    const std::string leftImagePath = "C:/Users/cooky/Documents/depth-estimation-from-stereo-images/rectified_images/left_rectified.jpg";
+    const std::string rightImagePath = "C:/Users/cooky/Documents/depth-estimation-from-stereo-images/rectified_images/right_rectified.jpg";
+
+    // take in rectified images
+    cv::Mat left_img = cv::imread(leftImagePath, cv::IMREAD_COLOR);
+    cv::Mat right_img = cv::imread(rightImagePath, cv::IMREAD_COLOR);
+
+    //TemplateMatcher tm(9);
+    DisparityMapper dm(11);
+    cv::Mat output = dm.computeDisparityMap(left_img, right_img);
+    dm.saveDisparityImage(output, "C:/Users/cooky/Documents/depth-estimation-from-stereo-images/other_image_output/disparity_map.jpg");
+
+    /*int xValue, yValue;
+    tm.findMatchingWindow(left_img, right_img, 500, 500, xValue, yValue);
+    cv::Mat left_output = left_img.clone();
+    cv::Mat right_output = right_img.clone();
+
+    tm.drawMatchingPoints(left_img, right_img, 500, 500, xValue, yValue, left_output, right_output);
+    cv::imwrite("C:/Users/cooky/Documents/depth-estimation-from-stereo-images/other_image_output/left_output.jpg", left_output);
+    cv::imwrite("C:/Users/cooky/Documents/depth-estimation-from-stereo-images/other_image_output/right_output.jpg", right_output);*/
+    return 0;
+}
