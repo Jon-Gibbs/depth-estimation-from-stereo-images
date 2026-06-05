@@ -70,15 +70,12 @@ int main()
     config["right_camera"]["disto"]["k3"] = calib.right_cam.disto[4];
 
     // Stereo baseline (translation between cameras)
-    std::cout << "Baseline T.x: " << calib.T.x << std::endl;
+    
     config["translation"]["x_pos"] = calib.stereo_transform.getTranslation()[0];
     config["translation"]["y_pos"] = calib.stereo_transform.getTranslation()[1];
     config["translation"]["z_pos"] = calib.stereo_transform.getTranslation()[2];
 
     // Stero rotation (rotation between cameras)
-    std::cout << "Rotation x: " << calib.stereo_transform.getRotationMatrix()[0][0]; << std::endl;
-    std::cout << "Rotation y: " << calib.stereo_transform.getRotationMatrix()[1][1]; << std::endl;
-    std::cout << "Rotation z: " << calib.stereo_transform.getRotationMatrix(); << std::endl;
     sl::Rotation R = calib.stereo_transform.getRotationMatrix();
     for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 3; j++) {
