@@ -28,9 +28,8 @@ This program takes a pair of images from the Sterolabs Zed2i camera and turns th
 
 ## Build for Linux and Mac
 
-Open a terminal in the sample directory and execute the following command:
+Open a terminal in the /launch directory and execute the following commands:
 
-    mkdir build
-    cd build
-    cmake ..
+    cmake .
     make
+    ./stereo_pipeline

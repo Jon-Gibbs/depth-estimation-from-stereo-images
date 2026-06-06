@@ -45,7 +45,6 @@ private:
     // rectification transforms
     cv::Mat R_L_, R_R_;
     cv::Mat P_L_, P_R_;
-    cv::Mat Q_;
 
     // remap tables
     cv::Mat map_L1_, map_L2_;

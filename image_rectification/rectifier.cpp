@@ -118,11 +118,6 @@ void StereoRectifier::computeRectification()
     P_R_ = (cv::Mat_<float>(3, 4) << fx, 0, cx, fx * tx,
             0, fy, cy, 0,
             0, 0, 1, 0);
-    // compute Q
-    Q_ = (cv::Mat_<float>(4, 4) << 1, 0, 0, -cx,
-          0, 1, 0, -cy,
-          0, 0, 0, fx,
-          0, 0, -1.0f / T_.at<float>(0), (cx - K_R_.at<float>(0, 2)) / T_.at<float>(0));
 }
 // PRE:  R_L_, R_R_, P_L_, P_R_, K_L_, K_R_, dist_L_, dist_R_, imageSize_ are all populated
 // POST: map_L1_, map_L2_, map_R1_, map_R2_ are populated and ready for use
