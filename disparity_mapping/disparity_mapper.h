@@ -14,6 +14,9 @@ public:
     // Normalizes the disparity map to an 8-bit grayscale image and saves it to disk.
     void saveDisparityImage(const cv::Mat &disparityMap, const std::string &outputPath);
 
+    // Clamps depth to [0, maxDepth], applies colormap, and saves to disk.
+    void saveDepthImage(const cv::Mat &depthMap, const std::string &outputPath, float maxDepth = 6000.0f);
+
     //precondition: disparity map 
     //postcondition: depth map
     cv::Mat computeDepthMap(const cv::Mat &disparityMap);

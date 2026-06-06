@@ -65,6 +65,23 @@ cv::Mat DisparityMapper::computeDepthMap(const cv::Mat& disparityMap){
     return depthMap;
 }
 
+void DisparityMapper::saveDepthImage(const cv::Mat &depthMap, const std::string &outputPath, float maxDepth) {
+    // clamp to [0, maxDepth] — removes outlier far pixels that crush the color range
+    cv::Mat clamped;
+    cv::threshold(depthMap, clamped, maxDepth, maxDepth, cv::THRESH_TRUNC);
+
+    // normalize the clamped range to 0-255
+    cv::Mat visual;
+    cv::normalize(clamped, visual, 0, 255, cv::NORM_MINMAX);
+    visual.convertTo(visual, CV_8U);
+
+    cv::Mat colorMap;
+    cv::applyColorMap(visual, colorMap, cv::COLORMAP_JET);
+
+    cv::imwrite(outputPath, colorMap);
+    std::cout << "Depth image saved to: " << outputPath << std::endl;
+}
+
 void DisparityMapper::saveDisparityImage(const cv::Mat &disparityMap, const std::string &outputPath) {
     // normalize to 0-255 range for visualization
     cv::Mat visual;

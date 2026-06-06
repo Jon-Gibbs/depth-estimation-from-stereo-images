@@ -26,3 +26,7 @@ target_link_libraries(stereo_pipeline
     ${OpenCV_LIBS}
     yaml-cpp
 )
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose Release or Debug" FORCE)
+endif()

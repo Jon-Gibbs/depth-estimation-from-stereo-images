@@ -12,7 +12,7 @@ int main()
     const int         numPairs = 6;
 
     StereoRectifier rectifier(calibPath, imageSize);
-    DisparityMapper mapper(11);
+    DisparityMapper mapper(13);
 
     for (int i = 1; i <= numPairs; i++)
     {
@@ -35,11 +35,16 @@ int main()
         std::string rectRightPath = "../rectified_images/right_rect_" + std::to_string(i) + ".jpg";
         cv::imwrite(rectLeftPath,  rectLeft);
         cv::imwrite(rectRightPath, rectRight);
-
+        
+        rectLeft = cv::imread(rectLeftPath);
+        rectRight = cv::imread(rectRightPath);
         cv::Mat disparity = mapper.computeDisparityMap(rectLeft, rectRight);
-
-        std::string dispPath = "../rectified_images/disparity_" + std::to_string(i) + ".jpg";
+        cv::Mat depth = mapper.computeDepthMap(disparity);
+        std::string depthPath = "../depth_maps/depth_" + std::to_string(i) + ".jpg";
+        std::string dispPath = "../disparity_maps/disparity_" + std::to_string(i) + ".jpg";
+        mapper.saveDepthImage(depth, depthPath, 6000.0f);
         mapper.saveDisparityImage(disparity, dispPath);
+
 
         std::cout << "Processed pair " << i << "\n";
     }
