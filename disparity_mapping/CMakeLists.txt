@@ -7,12 +7,13 @@ project(disparity_mapper)
 set(OpenCV_DIR "C:/msys64/ucrt64/lib/cmake/opencv4")
 
 find_package(OpenCV REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 add_executable(disparity_mapper main.cpp disparity_mapper.cpp template_matcher.cpp)
 
 # Include headers + link libraries
-target_include_directories(disparity_mapper PRIVATE ${OpenCV_INCLUDE_DIRS})
-target_link_libraries(disparity_mapper PRIVATE ${OpenCV_LIBS})
+target_include_directories(disparity_mapper PRIVATE ${OpenCV_INCLUDE_DIRS} ${YAML_CPP_INCLUDE_DIR})
+target_link_libraries(disparity_mapper PRIVATE ${OpenCV_LIBS} ${YAML_CPP_LIBRARIES})
 
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose Release or Debug" FORCE)

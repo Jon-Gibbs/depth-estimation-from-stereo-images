@@ -4,7 +4,9 @@
 
 
 DisparityMapper::DisparityMapper(int windowSize, int stride, int maxDisparity)
-    : _matcher(windowSize, maxDisparity), _windowSize(windowSize), _stride(stride), _maxDisparity(maxDisparity) {}
+    : _matcher(windowSize, maxDisparity), _windowSize(windowSize), _stride(stride), _maxDisparity(maxDisparity) {
+        loadCalibration("../camera/camera_info.yaml");
+    }
 
 cv::Mat DisparityMapper::computeDisparityMap(const cv::Mat &img_L, const cv::Mat &img_R) {
     int rows = img_L.rows;
@@ -45,6 +47,23 @@ cv::Mat DisparityMapper::computeDisparityMap(const cv::Mat &img_L, const cv::Mat
     std::cout << "\rComputing disparity map: 100%" << std::endl;
     return disparityMap;
 }
+cv::Mat DisparityMapper::computeDepthMap(const cv::Mat& disparityMap){
+    cv::Mat depthMap = cv::Mat::zeros(disparityMap.rows, disparityMap.cols, CV_32F);
+    //loop through disparity map
+    float disp =0;
+    float depth= 0;
+    float fxB = focal_length * baseline;
+    for(int i=0; i<disparityMap.rows;i++){
+        for(int j=0;j<disparityMap.cols; j++){
+            disp = disparityMap.at<float>(i,j);
+            if(disp > 0.0f){
+            depth = fxB/disp;
+            depthMap.at<float>(i,j) = depth;
+            }
+         }
+    }
+    return depthMap;
+}
 
 void DisparityMapper::saveDisparityImage(const cv::Mat &disparityMap, const std::string &outputPath) {
     // normalize to 0-255 range for visualization
@@ -58,4 +77,12 @@ void DisparityMapper::saveDisparityImage(const cv::Mat &disparityMap, const std:
 
     cv::imwrite(outputPath, colorMap);
     std::cout << "Disparity image saved to: " << outputPath << std::endl;
+}
+
+void DisparityMapper::loadCalibration(const std::string& filepath){
+    YAML::Node config = YAML::LoadFile(filepath);
+    //populate baseline
+    baseline = config["translation"]["x_pos"].as<float>();
+    //populate focal length
+    focal_length = config["left_camera"]["intrinsics"]["fx"].as<float>();
 }

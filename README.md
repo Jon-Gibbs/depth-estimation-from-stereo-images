@@ -26,7 +26,7 @@ This program takes a pair of images from the Sterolabs Zed2i camera and turns th
 - to build, cd into the /build directory, run cmake . then make and execute ./depth mapper
 - upon output, you will see 10 depth maps of 10 different images including their original image pairs
 
-## Build for Linux
+## Build for Linux and Mac
 
 Open a terminal in the sample directory and execute the following command:
 
