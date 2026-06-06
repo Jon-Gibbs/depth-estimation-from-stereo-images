@@ -4,7 +4,7 @@
 
 int main() {
     const std::string leftImagePath = "../rectified_images/left_rect_1.jpg";
-    const std::string rightImagePath = "../rectified_images/right_rect_2.jpg";
+    const std::string rightImagePath = "../rectified_images/right_rect_1.jpg";
 
     // take in rectified images
     cv::Mat left_img = cv::imread(leftImagePath, cv::IMREAD_COLOR);
