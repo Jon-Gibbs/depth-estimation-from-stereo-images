@@ -1,6 +1,6 @@
 # Depth estimation using stereo images
 
-This program takes a pair of images from the Sterolabs Zed2i camera and turns them into a depth map.
+This program takes a pair of images from the Sterolabs Zed2i camera and turns them into a depth map. See the full report [here](https://docs.google.com/document/d/1AjGTVTyczMZjU-FhKfvnZNC0laJ8YOxTjtjYcauXifo/edit?usp=sharing).
 
 ## Camera
 
